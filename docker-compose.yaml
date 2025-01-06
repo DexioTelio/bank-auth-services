@@ -1,23 +1,23 @@
 services:
   db:
     image: postgres:17.2-alpine3.21
-    container_name: bank_customer
+    container_name: bank_auth
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: customer_db
+      POSTGRES_DB: auth_db
     ports:
-      - "5433:5432"
+      - "5434:5432"
     networks:
       - bank-network
     volumes:
-      - db-data-bank-customer:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bank-customer-services
+    container_name: bank-auth-services
     ports:
       - "8086:8086"
     depends_on:
@@ -33,7 +33,7 @@ networks:
     driver: bridge
 
 volumes:
-  db-data-bank-customer:
+  db-data:
     driver: local
   app-data:
     driver: local

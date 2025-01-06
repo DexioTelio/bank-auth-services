@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: auth-services
+
+  datasource:
+    url: jdbc:postgresql://db:5432/auth_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+    initialization-mode: always
+    #data: classpath:data.sql
+    #schema: classpath:schema.sql
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 50000
+      minimum-idle: 2
+      idle-timeout: 30000
+      max-lifetime: 120000
+      validation-timeout: 3000
+      connection-test-query: SELECT 1
+
+server:
+  port: 8086
+
+logging:
+  level:
+    org.springframework.jdbc.core: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+
+jwt:
+  expiration-time: 900000
+
+JWT_SECRET_KEY: "21ed022891f83153efcc762851dc4183217736e6f7d710828abdeaeb7f19f1d5efcdbc0d427ec669475afad1e47e74eaaca9e7af1cd99210c9ff1ed971e5db40ff3048b5482cb6175d624c2e82f8bb137034f250752005b96cea2627533aa3a73ffa020b8dd8aa52afeefaca0ac05a547105847b61afd0d177274c97b125997d73e178e1ec200be5deb09c68bf446e819fdbc76ed1151b8b0535027fee8f3cc765d200d996bb45bd895f7d287139b075364af80d4d354d466bc47e5cd218e1db523827b1166a67cedd3373bc219421f14000e216e39c6b9342f01a9cbdd59671681214fe2c2e84a1baca4e67bdb132c3516fe9e4f6b76c47869a888c256a148a"
