@@ -11,7 +11,7 @@ services:
     networks:
       - bank-network
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data-bank-auth:/var/lib/postgresql/data
 
   app:
     build:
@@ -33,7 +33,7 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
+  db-data-bank-auth:
     driver: local
   app-data:
     driver: local
