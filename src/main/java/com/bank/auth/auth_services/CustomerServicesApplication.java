@@ -1,4 +1,4 @@
-package com.bank.customer.customer_services;
+package com.bank.auth.auth_services;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

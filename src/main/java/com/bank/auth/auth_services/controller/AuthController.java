@@ -1,7 +1,7 @@
-package com.bank.customer.customer_services.controller;
+package com.bank.auth.auth_services.controller;
 
 
-import com.bank.customer.customer_services.dto.LoginRequest;
+import com.bank.auth.auth_services.dto.LoginRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
