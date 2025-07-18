@@ -1,4 +1,4 @@
-package com.bank.auth.auth_services;
+package com.bank.auth.auth_services.model.entity;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
