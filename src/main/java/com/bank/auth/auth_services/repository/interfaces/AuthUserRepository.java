@@ -1,8 +1,11 @@
 package com.bank.auth.auth_services.repository.interfaces;
 
 import com.bank.auth.auth_services.model.CustomUserDetails;
+import com.bank.auth.auth_services.model.entity.AuthUser;
 import io.vavr.control.Try;
 
+import java.util.Optional;
+
 public interface AuthUserRepository {
-  Try<CustomUserDetails> findByUserName(String username);
+  Try<Optional<AuthUser>> findByUserName(String username);
 }
