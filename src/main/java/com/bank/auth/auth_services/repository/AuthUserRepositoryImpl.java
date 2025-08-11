@@ -19,12 +19,14 @@ public class AuthUserRepositoryImpl implements AuthUserRepository {
   private final AuthUserRowMapper authUserRowMapper;
 
   @Override
-  public Optional<AuthUser> findByUserName(String username) {
+  public Try<Optional<AuthUser>> findByUserName(String username) {
     String sql = """
             SELECT * FROM auth.auth_users WHERE username = :username
             """;
 
     Map<String, Object> params = Map.of("username", username);
-    return namedParameterJdbcTemplate.query(sql, params, authUserRowMapper).stream().findFirst();
+    return Try.of(() ->
+            namedParameterJdbcTemplate.query(sql, params, authUserRowMapper).stream().findFirst()
+    );
   }
 }
