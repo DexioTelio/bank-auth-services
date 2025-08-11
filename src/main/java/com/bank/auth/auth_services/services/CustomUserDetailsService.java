@@ -6,6 +6,7 @@ import com.bank.auth.auth_services.repository.AuthUserRepositoryImpl;
 import com.bank.auth.auth_services.repository.RoleRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
             .toList();
 
-    // Collection<? extends GrantedAuthority> authorities
+    return User.builder()
+            .username(authUser.getUsername())
+            .password(authUser.getPassword())
+            .authorities(authorities)
+            .accountLocked(!authUser.isAccountNonLocked())
+            .accountExpired(!authUser.isAccountNonLocked())
+            .credentialsExpired(!authUser.isCredentialsNonExpired())
+            .disabled(!authUser.isEnabled())
+            .build();
   }
 }
