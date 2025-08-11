@@ -7,5 +7,5 @@ import io.vavr.control.Try;
 import java.util.Optional;
 
 public interface AuthUserRepository {
-  Try<Optional<AuthUser>> findByUserName(String username);
+  Optional<AuthUser> findByUserName(String username);
 }
