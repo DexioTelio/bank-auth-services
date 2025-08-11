@@ -3,12 +3,14 @@ package com.bank.auth.auth_services.model.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
-@Getter
 @RequiredArgsConstructor
 @Builder
+@Getter
+@Setter
 public class AuthUser {
   private final Long id;
   private final Long externalUserId;
