@@ -27,6 +27,6 @@ public class AuthUserRepositoryImpl implements AuthUserRepository {
     Map<String, Object> params = Map.of("username", username);
     return Try.of(() ->
             namedParameterJdbcTemplate.query(sql, params, authUserRowMapper).stream().findFirst()
-    );
+    ).onFailure(err -> System.out.println("Error: " + err));
   }
 }
