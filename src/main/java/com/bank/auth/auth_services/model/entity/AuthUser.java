@@ -18,6 +18,7 @@ public class AuthUser {
   private final String email;
   private final String password;
   private final boolean accountNonLocked;
+  private final boolean isAccountNonExpired;
   private final boolean credentialsNonExpired;
   private final boolean emailVerified;
   private final boolean twoFactorEnable;
@@ -25,5 +26,4 @@ public class AuthUser {
   private final OffsetDateTime lastPasswordChangeAt;
   private final int userTypeId;
   private final String status;
-
 }
