@@ -5,23 +5,24 @@ import com.bank.auth.auth_services.enums.ErrorCode;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record ErrorResponse(
-        ErrorCode errorCode,
+public record ErrorResponse<T>(
+        int status,
+        T errorCode,
         Set<String> messages,
         ErrorDetails details,
         LocalDateTime timestamp
 ) {
 
-  public ErrorResponse(ErrorCode errorCode, Set<String> messages, ErrorDetails details) {
-    this(errorCode, messages, details, LocalDateTime.now());
+  public ErrorResponse(int status, T errorCode, Set<String> messages, ErrorDetails details) {
+    this(status, errorCode, messages, details, LocalDateTime.now());
   }
 
-  public ErrorResponse(ErrorCode errorCode, Set<String> messages) {
-    this(errorCode, messages, null, LocalDateTime.now());
+  public ErrorResponse(int status, T errorCode, Set<String> messages) {
+    this(status, errorCode, messages, null, LocalDateTime.now());
   }
 
-  public ErrorResponse(ErrorCode errorCode) {
-    this(errorCode, null, null, LocalDateTime.now());
+  public ErrorResponse(int status, T errorCode) {
+    this(status, errorCode, null, null, LocalDateTime.now());
   }
 
   public record ErrorDetails(
