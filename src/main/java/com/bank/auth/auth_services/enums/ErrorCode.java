@@ -1,9 +1,10 @@
 package com.bank.auth.auth_services.enums;
 
+import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
 import lombok.Getter;
 
 @Getter
-public enum ErrorCode {
+public enum ErrorCode implements BaseErrorCode {
   /* =====================================
    * CLIENT ERRORS (4xx)
    * ===================================== */
