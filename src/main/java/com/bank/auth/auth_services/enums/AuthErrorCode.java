@@ -3,7 +3,9 @@ package com.bank.auth.auth_services.enums;
 public enum AuthErrorCode implements BaseErrorCode {
   USERNAME_ALREADY_EXISTS(409, "Username already exists"),
   PASSWORD_TOO_WEAK(400, "password too wear"),
-  ACCOUNT_LOCKED(423, "account locked");
+  ACCOUNT_LOCKED(423, "account locked"),
+  INVALID_CREDENTIALS(401, "Invalid credentials"),
+  TOKEN_EXPIRED(401, "Authentication toke expired");
 
   private final int status;
   private final String message;
