@@ -1,5 +1,7 @@
 package com.bank.auth.auth_services.enums;
 
+import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
+
 public enum AuthErrorCode implements BaseErrorCode {
   USERNAME_ALREADY_EXISTS(409, "Username already exists"),
   PASSWORD_TOO_WEAK(400, "password too wear"),
