@@ -1,11 +1,11 @@
 package com.bank.auth.auth_services.dto;
 
-import com.bank.auth.auth_services.enums.ErrorCode;
+import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record ErrorResponse<T>(
+public record ErrorResponse<T extends BaseErrorCode>(
         int status,
         T errorCode,
         Set<String> messages,
