@@ -4,7 +4,7 @@ import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-
+// ErrorResponse is intended for HTTP responses.
 public record ErrorResponse<T extends BaseErrorCode>(
         int status,
         T errorCode,
