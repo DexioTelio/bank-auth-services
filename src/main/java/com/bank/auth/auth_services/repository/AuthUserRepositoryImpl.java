@@ -29,25 +29,6 @@ public class AuthUserRepositoryImpl implements AuthUserRepository {
     ).onFailure(err -> System.out.println("Error: " + err)); // esto hay que cambiarlo
   }
 
-//  @Override
-//  public Try<AuthUser> save(String username, String email, String hashedPassword) {
-//    String sql = """
-//            INSET INTO auth.auth_users (username, email password)
-//            VALUES (:username, :email, :password)
-//            RETURNING auth_user_id, username, email, password, status, account_non_locked,
-//                      credentials_non_expired, email_verified, two_factor_enable,
-//                      created_at, update_at;
-//            """;
-//
-//    Map<String, Object> params = Map.of(
-//            "username", username,
-//            "email", email,
-//            "password", hashedPassword
-//    );
-//    return Try.of(() ->
-//            namedParameterJdbcTemplate.queryForObject(sql, params, authUserRowMapper));
-//  }
-
   public boolean existByUsername(String username) {
     String sql = """
             SELECT EXISTS(SELECT 1 FROM auth.auth_users WHERE username = :username);
@@ -56,5 +37,14 @@ public class AuthUserRepositoryImpl implements AuthUserRepository {
     Map<String, Object> params = Map.of("username", username);
     return Boolean.TRUE.equals(
             namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class));
+  }
+
+  @Override
+  public void updateLastLogin(Long userId) {
+    String sql = """
+            UPDATE auth.auth_users SET last_login_at = NOW() WHERE auth_user_id = :id
+            """;
+    Map<String, Object> params = Map.of("id", userId);
+    namedParameterJdbcTemplate.update(sql, params);
   }
 }
