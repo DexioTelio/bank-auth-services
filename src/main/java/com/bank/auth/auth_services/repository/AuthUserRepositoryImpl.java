@@ -26,27 +26,27 @@ public class AuthUserRepositoryImpl implements AuthUserRepository {
     Map<String, Object> params = Map.of("username", username);
     return Try.of(() ->
             namedParameterJdbcTemplate.query(sql, params, authUserRowMapper).stream().findFirst()
-    ).onFailure(err -> System.out.println("Error: " + err));
+    ).onFailure(err -> System.out.println("Error: " + err)); // esto hay que cambiarlo
   }
 
-  @Override
-  public Try<AuthUser> save(String username, String email, String hashedPassword) {
-    String sql = """
-            INSET INTO auth.auth_users (username, email password)
-            VALUES (:username, :email, :password)
-            RETURNING auth_user_id, username, email, password, status, account_non_locked,
-                      credentials_non_expired, email_verified, two_factor_enable,
-                      created_at, update_at;
-            """;
-    Map<String, Object> params = Map.of(
-            "username", username,
-            "email", email,
-            "password", hashedPassword
-    );
-
-    return Try.of(() ->
-            namedParameterJdbcTemplate.queryForObject(sql, params, authUserRowMapper));
-  }
+//  @Override
+//  public Try<AuthUser> save(String username, String email, String hashedPassword) {
+//    String sql = """
+//            INSET INTO auth.auth_users (username, email password)
+//            VALUES (:username, :email, :password)
+//            RETURNING auth_user_id, username, email, password, status, account_non_locked,
+//                      credentials_non_expired, email_verified, two_factor_enable,
+//                      created_at, update_at;
+//            """;
+//
+//    Map<String, Object> params = Map.of(
+//            "username", username,
+//            "email", email,
+//            "password", hashedPassword
+//    );
+//    return Try.of(() ->
+//            namedParameterJdbcTemplate.queryForObject(sql, params, authUserRowMapper));
+//  }
 
   public boolean existByUsername(String username) {
     String sql = """

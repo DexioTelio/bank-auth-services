@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface AuthUserRepository {
   Try<Optional<AuthUser>> findByUserName(String username);
-  Try<AuthUser> save(String username, String email, String hashedPassword);
 }
