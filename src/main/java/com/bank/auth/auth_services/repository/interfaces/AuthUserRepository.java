@@ -10,5 +10,4 @@ public interface AuthUserRepository {
   Try<Optional<AuthUser>> findByUserName(String username);
   boolean existByUsername(String username);
   void updateLastLogin(Long userId);
-  }
 }
