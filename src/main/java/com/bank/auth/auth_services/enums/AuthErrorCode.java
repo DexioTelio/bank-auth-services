@@ -7,7 +7,8 @@ public enum AuthErrorCode implements BaseErrorCode {
   PASSWORD_TOO_WEAK(400, "password too wear"),
   ACCOUNT_LOCKED(423, "account locked"),
   INVALID_CREDENTIALS(401, "Invalid credentials"),
-  TOKEN_EXPIRED(401, "Authentication toke expired");
+  TOKEN_EXPIRED(401, "Authentication toke expired"),
+  USER_NOT_FOUND(404, "User not found");
 
   private final int status;
   private final String message;
