@@ -16,15 +16,21 @@ public class AuthService {
   private final AuthUserRepositoryImpl authUserRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public Result<Void> register(RegisterRequest request) {
-   if (authUserRepository.existByUsername(request.username())) {
-     return Result.failure(AuthErrorCode.USERNAME_ALREADY_EXISTS.getMessage());
-    }
-
-    String hashedPassword = bCryptPasswordEncoder.encode(request.password());
-
-   Try<AuthUser> user = authUserRepository.save(request.username(), request.email(), hashedPassword);
-    return Result.success();
-
+  public Result<AuthUser> login(String username, String rawPassword) {
+    return authUserRepository.findByUserName(username)
+            .map(optUser -> optUser
+                    .map(user -> {
+                      // We verify the password
+                      if (bCryptPasswordEncoder.matches(rawPassword, user.getPassword())) {
+                        // We update the last login
+                        authUserRepository.updateLastLogin(user.getId());
+                        return Result.success(user);
+                      } else {
+                        return Result.<AuthUser>failure(AuthErrorCode.INVALID_CREDENTIALS.getMessage());
+                      }
+                    })
+                    .orElse(Result.<AuthUser>failure(AuthErrorCode.USER_NOT_FOUND.getMessage()))
+            )
+            .getOrElse(() -> Result.<AuthUser>failure("Unexpected error"));
   }
 }
