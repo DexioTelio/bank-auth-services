@@ -1,19 +1,68 @@
 package com.bank.auth.auth_services.exception;
 
+import com.bank.auth.auth_services.dto.ErrorResponse;
+import com.bank.auth.auth_services.enums.AuthErrorCode;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.Instant;
+import java.util.Map;
+import java.util.Set;
+
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
   private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  @ExceptionHandler(UsernameNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException ex) {
+  // ❌ Errores de validación (p.ej. @Valid)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+    var errors = ex.getBindingResult().getFieldErrors().stream()
+            .map(err -> Map.of("field", err.getField(), "message", err.getDefaultMessage()))
+            .toList();
 
+    return ResponseEntity.badRequest().body(new ErrorResponse);
+    Map.of(
+            "error", "VALIDATION_ERROR",
+            "details", errors,
+            "timestamp", Instant.now()
+    );
+  }
+
+  // Database errors
+  @ExceptionHandler(DataAccessException.class)
+  public ResponseEntity<ErrorResponse<AuthErrorCode>> handleDatabaseError(DataAccessException ex) {
+    logger.error("Database error occurred", ex);
+
+    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+            .body(new ErrorResponse<>(
+                    HttpStatus.SERVICE_UNAVAILABLE.value(),
+                    AuthErrorCode.DATABASE_ERROR,
+                    Set.of("Service unavailable, please try again later"),
+                    null
+            ));
+  }
+
+  // ❌ Cualquier otro error no controlado
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse<AuthErrorCode>> handleUnexpectedError(Exception ex) {
+    logger.error("Unexpected error occurred", ex);
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new ErrorResponse<>(
+                    AuthErrorCode.INTERNAL_ERROR.getStatus(),
+                    AuthErrorCode.INTERNAL_ERROR,
+                    Set.of("An unexpected error occurred"),
+                    null
+            ));
   }
 }
+
