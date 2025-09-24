@@ -16,12 +16,12 @@ public class AuthService {
   private final AuthUserRepositoryImpl authUserRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public Result<AuthUser> login(String username, String rawPassword) {
+  public Result<AuthUser> login(String username, String password) {
     return authUserRepository.findByUserName(username)
             .map(optUser -> optUser
                     .map(user -> {
                       // We verify the password
-                      if (bCryptPasswordEncoder.matches(rawPassword, user.getPassword())) {
+                      if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
                         // We update the last login
                         authUserRepository.updateLastLogin(user.getId());
                         return Result.success(user);

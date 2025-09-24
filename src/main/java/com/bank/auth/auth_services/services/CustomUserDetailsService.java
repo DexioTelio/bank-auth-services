@@ -1,5 +1,6 @@
 package com.bank.auth.auth_services.services;
 
+import com.bank.auth.auth_services.enums.UserStatus;
 import com.bank.auth.auth_services.model.entity.AuthUser;
 import com.bank.auth.auth_services.model.entity.Role;
 import com.bank.auth.auth_services.repository.AuthUserRepositoryImpl;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,9 +37,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             .password(authUser.getPassword())
             .authorities(authorities)
             .accountLocked(!authUser.isAccountNonLocked())
-            .accountExpired(!authUser.isAccountNonLocked())
+            .accountExpired(!authUser.isAccountNonExpired())
             .credentialsExpired(!authUser.isCredentialsNonExpired())
-            .disabled(!authUser.isEnabled())
+            .disabled(authUser.getStatus().equals(UserStatus.ACTIVE))
             .build();
   }
 }
