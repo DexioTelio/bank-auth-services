@@ -1,8 +1,6 @@
 package com.bank.auth.auth_services.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public record Result<T>(T value, boolean isSuccess, List<String> errors) {
   public Result {
@@ -10,16 +8,20 @@ public record Result<T>(T value, boolean isSuccess, List<String> errors) {
     validateState(isSuccess, errors);
   }
 
-  private Result<Void> validateState(boolean isSuccess, List<String> errors) {
-    List<String> validateErrors = new ArrayList<>();
+  private void validateState(boolean isSuccess, List<String> errors) {
+    if (errors == null) errors = Collections.emptyList();
+
+    List<String> inconsistencies = new ArrayList<>();
 
     if (isSuccess && !errors.isEmpty()) {
-      validateErrors.add("Successful result cannot have errors");
+      inconsistencies.add("Successful result cannot have errors");
     }
     if (!isSuccess && errors.isEmpty()) {
-      validateErrors.add(("Failed result require at least 1 error"));
+      inconsistencies.add(("Failed result require at least 1 error"));
     }
-    return validateErrors.isEmpty() ? Result.success() : Result.failure(validateErrors);
+    if (inconsistencies.isEmpty()) {
+      System.out.println("Result validation warning: " + inconsistencies);
+    }
   }
 
   public static <T> Result<T> success(T value) {
@@ -38,7 +40,13 @@ public record Result<T>(T value, boolean isSuccess, List<String> errors) {
     return new Result<>(null, false, Collections.singletonList(errors));
   }
 
-  public List<String> getUniqueError() { return errors().stream().distinct().toList();}
+  public List<String> getUniqueErrorList() {
+    return errors().stream().distinct().toList(); }
+
+  public Set<String> getUniqueErrorSet() {
+    return new HashSet<>(errors());
+  }
+
   public boolean isFailure() { return !isSuccess; }
   public boolean isSuccess() { return isSuccess; }
 }
