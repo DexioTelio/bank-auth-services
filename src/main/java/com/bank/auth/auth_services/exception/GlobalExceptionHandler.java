@@ -8,14 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.Instant;
-import java.util.Map;
+
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -24,17 +23,18 @@ public class GlobalExceptionHandler {
 
   // ❌ Errores de validación (p.ej. @Valid)
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-    var errors = ex.getBindingResult().getFieldErrors().stream()
-            .map(err -> Map.of("field", err.getField(), "message", err.getDefaultMessage()))
-            .toList();
+  public ResponseEntity<ErrorResponse<AuthErrorCode>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    Set<String> errors = ex.getBindingResult().getFieldErrors().stream()
+            .map(err -> err.getField() + ": " + err.getDefaultMessage())
+            .collect(Collectors.toSet());
 
-    return ResponseEntity.badRequest().body(new ErrorResponse);
-    Map.of(
-            "error", "VALIDATION_ERROR",
-            "details", errors,
-            "timestamp", Instant.now()
-    );
+    return ResponseEntity.badRequest()
+            .body(new ErrorResponse<>(
+                    AuthErrorCode.FIELD_VALIDATION_FAILED.getStatus(),
+                    AuthErrorCode.FIELD_VALIDATION_FAILED,
+                    errors,
+                    null
+            ));
   }
 
   // Database errors
@@ -46,12 +46,11 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse<>(
                     HttpStatus.SERVICE_UNAVAILABLE.value(),
                     AuthErrorCode.DATABASE_ERROR,
-                    Set.of("Service unavailable, please try again later"),
-                    null
+                    Set.of("Service unavailable, please try again later")
             ));
   }
 
-  // ❌ Cualquier otro error no controlado
+  // Any other uncontrolled error
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse<AuthErrorCode>> handleUnexpectedError(Exception ex) {
     logger.error("Unexpected error occurred", ex);
@@ -60,8 +59,7 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse<>(
                     AuthErrorCode.INTERNAL_ERROR.getStatus(),
                     AuthErrorCode.INTERNAL_ERROR,
-                    Set.of("An unexpected error occurred"),
-                    null
+                    Set.of("An unexpected error occurred")
             ));
   }
 }
