@@ -9,7 +9,8 @@ public enum AuthErrorCode implements BaseErrorCode {
   INVALID_CREDENTIALS(401, "Invalid credentials"),
   TOKEN_EXPIRED(401, "Authentication toke expired"),
   USER_NOT_FOUND(404, "User not found"),
-  DATABASE_ERROR(503, "Database services unavailable");
+  DATABASE_ERROR(503, "Database services unavailable"),
+  INTERNAL_ERROR(500, "Unexpected internal server error")
 
   private final int status;
   private final String message;
