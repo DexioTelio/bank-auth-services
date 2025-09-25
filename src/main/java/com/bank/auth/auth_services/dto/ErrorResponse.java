@@ -13,16 +13,16 @@ public record ErrorResponse<T extends BaseErrorCode>(
         LocalDateTime timestamp
 ) {
 
-  public ErrorResponse(int status, T errorCode, Set<String> messages, ErrorDetails details) {
-    this(status, errorCode, messages, details, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode, Set<String> messages, ErrorDetails details) {
+    return new ErrorResponse<>(status, errorCode, messages, details, LocalDateTime.now());
   }
 
-  public ErrorResponse(int status, T errorCode, Set<String> messages) {
-    this(status, errorCode, messages, null, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode, Set<String> messages) {
+    return new ErrorResponse<>(status, errorCode, messages, null, LocalDateTime.now());
   }
 
-  public ErrorResponse(int status, T errorCode) {
-    this(status, errorCode, null, null, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode) {
+    return new ErrorResponse<>(status, errorCode, null, null, LocalDateTime.now());
   }
 
   public record ErrorDetails(
