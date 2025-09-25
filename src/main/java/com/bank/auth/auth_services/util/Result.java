@@ -1,8 +1,10 @@
 package com.bank.auth.auth_services.util;
 
+import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
+
 import java.util.*;
 
-public record Result<T>(T value, boolean isSuccess, List<String> errors) {
+public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode, List<String> errors) {
   public Result {
     errors = Collections.unmodifiableList(errors);
     validateState(isSuccess, errors);
@@ -25,19 +27,27 @@ public record Result<T>(T value, boolean isSuccess, List<String> errors) {
   }
 
   public static <T> Result<T> success(T value) {
-    return new Result<>(value, true, null);
+    return new Result<>(value, true, Set.of(), null);
   }
 
   public static Result<Void> success() {
-    return new Result<>(null, true, null);
+    return new Result<>(null, true, Set.of(), null);
   }
 
   public static <T> Result<T> failure(List<String> errors) {
-    return new Result<>(null, false, errors);
+    return new Result<>(null, false, Set.of(), errors);
   }
 
   public static <T> Result<T> failure(String errors) {
-    return new Result<>(null, false, Collections.singletonList(errors));
+    return new Result<>(null, false, Set.of(), Collections.singletonList(errors));
+  }
+
+  public static <T> Result<T> failure(Set<BaseErrorCode> errorCode, List<String> errors) {
+    return new Result<>(null, false, errorCode, errors);
+  }
+
+  public static <T> Result<T> failure(BaseErrorCode errorCode, String errors) {
+    return new Result<>(null, false, Set.of(errorCode), Collections.singletonList(errors));
   }
 
   public List<String> getUniqueErrorList() {
