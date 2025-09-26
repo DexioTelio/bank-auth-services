@@ -2,10 +2,13 @@ package com.bank.auth.auth_services.util;
 
 import com.bank.auth.auth_services.enums.AuthErrorCode;
 import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode, List<String> errors) {
+  private static final Logger logger = LoggerFactory.getLogger(Result.class);
   public Result {
     errors = errors == null ? Collections.emptyList() : Collections.unmodifiableList(errors);
     errorCode = errorCode == null ? Collections.emptySet() : Set.copyOf(errorCode);
@@ -31,19 +34,19 @@ public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode
   }
 
   public static <T> Result<T> success(T value) {
-    return validate(new Result<>(value, true, Set.of(), null));
+    return validate(new Result<>(value, true, null, null));
   }
 
   public static Result<Void> success() {
-    return validate(new Result<>(null, true, Set.of(), null));
+    return validate(new Result<>(null, true, null, null));
   }
 
   public static <T> Result<T> failure(List<String> errors) {
-    return validate(new Result<>(null, false, Set.of(), errors));
+    return validate(new Result<>(null, false, null, errors));
   }
 
   public static <T> Result<T> failure(String errors) {
-    return validate(new Result<>(null, false, Set.of(), Collections.singletonList(errors)));
+    return validate(new Result<>(null, false, null, Collections.singletonList(errors)));
   }
 
   public static <T> Result<T> failure(Set<BaseErrorCode> errorCode, List<String> errors) {
