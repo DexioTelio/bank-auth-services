@@ -3,11 +3,7 @@ package com.bank.auth.auth_services.enums;
 import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
 
 public enum AuthErrorCode implements BaseErrorCode {
-  USERNAME_ALREADY_EXISTS(409, "Username already exists"),
-  PASSWORD_TOO_WEAK(400, "password too wear"),
-  ACCOUNT_LOCKED(423, "account locked"),
   INVALID_CREDENTIALS(401, "Invalid credentials"),
-  TOKEN_EXPIRED(401, "Authentication toke expired"),
   USER_NOT_FOUND(404, "User not found"),
   DATABASE_ERROR(503, "Database services unavailable"),
   INTERNAL_ERROR(500, "Unexpected internal server error"),
