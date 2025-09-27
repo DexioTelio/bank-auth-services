@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
   private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  // ❌ Errores de validación (p.ej. @Valid)
+  // Validation errors (e.g., @Valid)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse<AuthErrorCode>> handleValidationErrors(MethodArgumentNotValidException ex) {
     Set<String> errors = ex.getBindingResult().getFieldErrors().stream()
@@ -29,7 +28,7 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toSet());
 
     return ResponseEntity.badRequest()
-            .body(new ErrorResponse<>(
+            .body(ErrorResponse.from(
                     AuthErrorCode.FIELD_VALIDATION_FAILED.getStatus(),
                     AuthErrorCode.FIELD_VALIDATION_FAILED,
                     errors,
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
     logger.error("Database error occurred", ex);
 
     return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-            .body(new ErrorResponse<>(
+            .body(ErrorResponse.from(
                     HttpStatus.SERVICE_UNAVAILABLE.value(),
                     AuthErrorCode.DATABASE_ERROR,
                     Set.of("Service unavailable, please try again later")
@@ -56,7 +55,7 @@ public class GlobalExceptionHandler {
     logger.error("Unexpected error occurred", ex);
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new ErrorResponse<>(
+            .body(ErrorResponse.from(
                     AuthErrorCode.INTERNAL_ERROR.getStatus(),
                     AuthErrorCode.INTERNAL_ERROR,
                     Set.of("An unexpected error occurred")
