@@ -44,7 +44,8 @@ public final class Result<T, K extends BaseErrorCode> {
   }
 
   public List<String> getUniqueErrorList() {
-    return errors.stream().distinct().toList(); }
+    return errors.stream().distinct().toList();
+  }
 
   public Set<String> getUniqueErrorSet() {
     return new HashSet<>(errors);
