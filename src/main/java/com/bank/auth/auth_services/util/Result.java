@@ -17,7 +17,7 @@ public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode
   private static <T> Result<T> validate(Result<T> result) {
     List<String> inconsistencies = new ArrayList<>();
 
-    if (result.isSuccess && (!result.errors.isEmpty() || !result.errorCode().isEmpty())) {
+    if (result.isSuccess && (!result.errors.isEmpty() || !result.errorCode.isEmpty())) {
       inconsistencies.add("Successful result cannot have errors or code error");
     }
     if (!result.isSuccess && result.errors.isEmpty()) {
