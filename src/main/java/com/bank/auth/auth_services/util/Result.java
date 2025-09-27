@@ -17,11 +17,14 @@ public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode
   private static <T> Result<T> validate(Result<T> result) {
     List<String> inconsistencies = new ArrayList<>();
 
-    if (result.isSuccess && !result.errors.isEmpty()) {
-      inconsistencies.add("Successful result cannot have errors");
+    if (result.isSuccess && (!result.errors.isEmpty() || !result.errorCode().isEmpty())) {
+      inconsistencies.add("Successful result cannot have errors or code error");
     }
     if (!result.isSuccess && result.errors.isEmpty()) {
       inconsistencies.add(("Failed result require at least 1 error"));
+    }
+    if (result.isFailure() && result.errors.contains(null)) {
+      inconsistencies.add("The failed result must have at least one error.");
     }
     if (inconsistencies.isEmpty()) {
       return result;
@@ -62,6 +65,10 @@ public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode
 
   public Set<String> getUniqueErrorSet() {
     return new HashSet<>(errors());
+  }
+
+  public Optional<BaseErrorCode> getPrimaryErrorCode() {
+    return errorCode().stream().findFirst();
   }
 
   public boolean isFailure() { return !isSuccess; }
