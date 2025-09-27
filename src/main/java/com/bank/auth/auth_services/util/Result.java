@@ -23,9 +23,6 @@ public record Result<T>(T value, boolean isSuccess, Set<BaseErrorCode> errorCode
     if (!result.isSuccess && result.errors.isEmpty()) {
       inconsistencies.add(("Failed result require at least 1 error"));
     }
-    if (result.isFailure() && result.errors.contains(null)) {
-      inconsistencies.add("The failed result must have at least one error.");
-    }
     if (inconsistencies.isEmpty()) {
       return result;
     } else {
