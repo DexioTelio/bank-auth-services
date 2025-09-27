@@ -1,9 +1,11 @@
 package com.bank.auth.auth_services.util;
 
 import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
+import lombok.Getter;
 
 import java.util.*;
 
+@Getter
 public final class Result<T, K extends BaseErrorCode> {
   private final T value;
   private final boolean isSuccess;
