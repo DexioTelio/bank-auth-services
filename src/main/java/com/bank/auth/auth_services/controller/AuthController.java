@@ -7,6 +7,7 @@ import com.bank.auth.auth_services.enums.AuthErrorCode;
 import com.bank.auth.auth_services.model.entity.AuthUser;
 import com.bank.auth.auth_services.services.AuthService;
 import com.bank.auth.auth_services.util.Result;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,20 +26,29 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-    Result<AuthUser> result = authService.login(request.username(), request.password());
+  public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+    return authService.login(request.username(), request.password())
+            .fold(
+                    ResponseEntity::ok,
+                    failure -> {
+                      HttpStatus status = failure.getPrimaryErrorCode()
+                              .map(code -> switch (code) {
+                                case INVALID_CREDENTIALS, USER_NOT_FOUND -> HttpStatus.UNAUTHORIZED;
+                                case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+                                default -> HttpStatus.BAD_REQUEST;
+                              })
+                              .orElse(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    if (result.isSuccess()) {
-      return ResponseEntity.ok(result.value());
-    } else {
-      return ResponseEntity
-              .status(HttpStatus.CONFLICT)
-              .body(new ErrorResponse<>(
-                      409,
-                      AuthErrorCode.USERNAME_ALREADY_EXISTS,
-                      result.getUniqueErrorSet()
-              ));
-    }
+                      ErrorResponse<?> body = ErrorResponse.from(
+                              status.value(),
+                              status.getReasonPhrase(),
+                              failure.getPrimaryErrorCode().get(),
+                              failure.getUniqueErrorSet(),
+                              httpRequest.getRequestURI()
+                      );
+                      return ResponseEntity.status(status).body(body);
+                    }
+            );
   }
 
   @PostMapping("/roles")

@@ -4,6 +4,7 @@ import com.bank.auth.auth_services.enums.interfaces.BaseErrorCode;
 import lombok.Getter;
 
 import java.util.*;
+import java.util.function.Function;
 
 @Getter
 public final class Result<T, K extends BaseErrorCode> {
@@ -53,6 +54,10 @@ public final class Result<T, K extends BaseErrorCode> {
 
   public Optional<K> getPrimaryErrorCode() {
     return errorCode.stream().findFirst();
+  }
+
+  public <R> R fold(Function<T, R> onSuccess, Function<Result<T, K>, R> onFailure) {
+    return isSuccess ? onSuccess.apply(value) : onFailure.apply(this);
   }
 
   public boolean isFailure() { return !isSuccess; }
