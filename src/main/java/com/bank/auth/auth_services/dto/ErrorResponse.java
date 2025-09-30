@@ -7,22 +7,24 @@ import java.util.Set;
 // ErrorResponse is intended for HTTP responses.
 public record ErrorResponse<T extends BaseErrorCode>(
         int status,
+        String error,
         T errorCode,
         Set<String> messages,
         ErrorDetails details,
+        String path,
         LocalDateTime timestamp
 ) {
 
-  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode, Set<String> messages, ErrorDetails details) {
-    return new ErrorResponse<>(status, errorCode, messages, details, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, String error, T errorCode, Set<String> messages, ErrorDetails details, String path) {
+    return new ErrorResponse<>(status, error, errorCode, messages, details, path, LocalDateTime.now());
   }
 
-  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode, Set<String> messages) {
-    return new ErrorResponse<>(status, errorCode, messages, null, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, String error, T errorCode, Set<String> messages, String path) {
+    return new ErrorResponse<>(status, error, errorCode, messages, null, path, LocalDateTime.now());
   }
 
-  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, T errorCode) {
-    return new ErrorResponse<>(status, errorCode, null, null, LocalDateTime.now());
+  public static <T extends BaseErrorCode> ErrorResponse<T> from(int status, String error, T errorCode, String path) {
+    return new ErrorResponse<>(status, error, errorCode, null, null, path, LocalDateTime.now());
   }
 
   public record ErrorDetails(
