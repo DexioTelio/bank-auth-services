@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public enum UserStatus {
   ACTIVE("active"),
   INACTIVE("inactive"),
@@ -12,4 +11,8 @@ public enum UserStatus {
   LOCKED("locked");
 
   private final String status;
+
+  UserStatus(String status) {
+    this.status = status;
+  }
 }
