@@ -3,10 +3,7 @@ package com.bank.auth.auth_services.controller;
 
 import com.bank.auth.auth_services.dto.ErrorResponse;
 import com.bank.auth.auth_services.dto.LoginRequest;
-import com.bank.auth.auth_services.enums.AuthErrorCode;
-import com.bank.auth.auth_services.model.entity.AuthUser;
 import com.bank.auth.auth_services.services.AuthService;
-import com.bank.auth.auth_services.util.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
