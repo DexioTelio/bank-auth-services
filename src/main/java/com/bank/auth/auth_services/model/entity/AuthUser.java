@@ -1,9 +1,6 @@
 package com.bank.auth.auth_services.model.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -11,6 +8,7 @@ import java.time.OffsetDateTime;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
 public class AuthUser {
   private final Long id;
   private final Long externalUserId;
