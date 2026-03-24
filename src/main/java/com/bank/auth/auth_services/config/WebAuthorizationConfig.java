@@ -26,7 +26,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class WebAuthorizationConfig {
   private final UserDetailsService userDetailsService;
   private final JwtTokenFilter jwtFilter;
 
@@ -36,7 +36,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     return http.authorizeHttpRequests(req ->
                     req.requestMatchers("/auth/register", "/auth/login")
                             .permitAll()
@@ -46,7 +46,6 @@ public class SecurityConfig {
             )
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationManager(authenticationManager())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(ex ->
                     ex.authenticationEntryPoint((request, response, authException) ->
@@ -63,7 +62,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager() throws Exception {
+  public AuthenticationManager authenticationManager() {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
     provider.setUserDetailsService(userDetailsService);
     provider.setPasswordEncoder(bCryptPasswordEncoder());
