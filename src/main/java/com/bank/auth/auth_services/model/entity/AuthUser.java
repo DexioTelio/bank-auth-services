@@ -3,6 +3,7 @@ package com.bank.auth.auth_services.model.entity;
 import lombok.*;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Builder
@@ -15,13 +16,15 @@ public class AuthUser {
   private final String username;
   private final String email;
   private final String password;
+  private final String status;
   private final boolean accountNonLocked;
-  private final boolean isAccountNonExpired;
   private final boolean credentialsNonExpired;
   private final boolean emailVerified;
   private final boolean twoFactorEnable;
+  private final boolean isAccountNonExpired;
   private final OffsetDateTime lastLoginAt;
   private final OffsetDateTime lastPasswordChangeAt;
   private final int userTypeId;
-  private final String status;
+  private final List<UserRole> roles;
+
 }

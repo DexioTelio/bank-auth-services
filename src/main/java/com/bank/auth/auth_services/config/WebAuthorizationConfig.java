@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -38,10 +39,10 @@ public class WebAuthorizationConfig {
   @Bean
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     return http.authorizeHttpRequests(req ->
-                    req.requestMatchers("/auth/register", "/auth/login")
-                            .permitAll()
-                            .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
-                            .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                    req.requestMatchers("/admin/**").hasRole("SYSTEM_ADMIN")
+                            .requestMatchers(HttpMethod.GET,"/accounts/**").hasAuthority("ACCOUNT:READ")
+                            .requestMatchers("/transfers/create").hasAuthority("TRANSFER:CREATE")
+                            .requestMatchers("/loan/approve").hasAuthority("LOAN:APPROVE")
                             .anyRequest().authenticated()
             )
             .csrf(AbstractHttpConfigurer::disable)

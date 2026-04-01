@@ -48,6 +48,16 @@ public class AuthController {
             );
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout() {
+    return null;
+  };
+
+  @PostMapping("/refresh")
+  public ResponseEntity<?> refresh() {
+    return null;
+  };
+
   @PostMapping("/roles")
   public ResponseEntity<?> roles(@RequestBody LoginRequest request) {
     return null;

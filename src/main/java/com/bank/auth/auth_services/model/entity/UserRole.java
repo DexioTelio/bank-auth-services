@@ -1,10 +1,12 @@
 package com.bank.auth.auth_services.model.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.OffsetDateTime;
 
+@Getter
 @Builder
 @RequiredArgsConstructor
 public class UserRole {
